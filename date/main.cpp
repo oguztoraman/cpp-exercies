@@ -116,14 +116,13 @@ int main()
     std::cout << "enter date: ";
     std::cin >> d7;
     std::cout << "d7; " << d7 << "\n";
-    /* 21, 22 */
+    /* 30 */
     Date::Weekday w{Date::Weekday::Friday};
     std::cout << "w before w++; " << w++ << "\n";
     for (auto i = 0; i < 10; ++i){
         std::cout << "w; " << w++ << "\n";
     }
     std::cout << "w; " << w << "\n";
-    /* 23, 24 */
     std::cout << "w before w--; " << w-- << "\n";
     for (auto i = 0; i < 10; ++i){
         std::cout << "w; " << w-- << "\n";
