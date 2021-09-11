@@ -1,1 +1,1 @@
-# C++ Course Exercies
+# C++ Course Exercises
