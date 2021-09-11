@@ -1,2 +1,1 @@
-# cpp-exercies
-C++ Course Exercies
+# C++ Course Exercies
