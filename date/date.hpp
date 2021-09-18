@@ -14,7 +14,7 @@ public:
     enum class Weekday {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}; //4
 
     Date() = default; //5
-    Date(const int& _d, const int& _m, const int& _y);  //6
+    Date(int _d, int _m, int _y);  //6
     Date(const char* _p);  //7
     Date(const std::time_t& _timer); //8
 
@@ -24,26 +24,23 @@ public:
     int get_year_day() const; //12
     Weekday get_week_day() const; //13
 
-    Date& set_month_day(const int& _day); //14
-    Date& set_month(const int& _month); //15
-    Date& set_year(const int& _year); //16
-    Date& set(const int& _d, const int& _m, const int& _y); //17
+    Date& set_month_day(int _day); //14
+    Date& set_month(int _month); //15
+    Date& set_year(int _year); //16
+    Date& set(int _d, int _m, int _y); //17
 
-    Date operator-(const int& _day) const; //18
-    Date& operator+=(const int& _day); //19
-    Date& operator-=(const int& _day); //20
+    Date operator-(int _day) const; //18
+    Date& operator+=(int _day); //19
+    Date& operator-=(int _day); //20
     Date& operator++(); //21
     Date operator++(int); //22
     Date& operator--(); //23
     Date operator--(int); //24
 
     static Date random_date(); //25
-    static constexpr bool isleap(const int& _y)
+    static constexpr bool isleap(int _y)
     {
-        if (((_y % 4 == 0) && (_y % 100 != 0)) || (_y % 400 == 0)){
-            return true;
-        }
-        return false;
+        return (((_y % 4 == 0) && (_y % 100 != 0)) || (_y % 400 == 0));
     } //26
 
     friend bool operator<(const Date& _d1, const Date& _d2); //27
@@ -60,8 +57,8 @@ private:
 
     void set_weekday();
 
-    static bool check_arguments(const int& _d, const int& _m, const int& _y);
-    static std::string convert_month(const int& _m);
+    static bool check_arguments(int _d, int _m, int _y);
+    static std::string convert_month(int _m);
     static int convert_month(const std::string& _m);
 };
 
@@ -71,8 +68,8 @@ bool operator>=(const Date& _d1, const Date& _d2); //27
 bool operator!=(const Date& _d1, const Date& _d2); //27
 
 long operator-(const Date& _d1, const Date& _d2); //28
-Date operator+(const Date& _date, const int& _n); //29
-Date operator+(const int& _n, const Date& _date); //29
+Date operator+(const Date& _date, int _n); //29
+Date operator+(int _n, const Date& _date); //29
 
 Date::Weekday& operator++(Date::Weekday& r); //30
 Date::Weekday operator++(Date::Weekday& r, int); //30
