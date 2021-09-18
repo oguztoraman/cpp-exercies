@@ -6,7 +6,7 @@
 
 namespace project {
 
-Date::Date(const int& _d, const int& _m, const int& _y)
+Date::Date(int _d, int _m, int _y)
 {
     set(_d, _m, _y);
 }
@@ -36,7 +36,7 @@ Date::Date(const std::time_t& _timer)
     set(d, m, y);
 }
 
-bool Date::check_arguments(const int& _d, const int& _m, const int& _y)
+bool Date::check_arguments(int _d, int _m, int _y)
 {
     if ((_y >= year_base) && (_m >= 1 && _m <= 12)){
         if (_m == 4 || _m == 6 || _m == 9 || _m == 11){
@@ -64,7 +64,7 @@ int Date::get_month() const
     return m_month;
 }
 
-std::string Date::convert_month(const int& _m)
+std::string Date::convert_month(int _m)
 {
     switch (_m){
     case 1:  return "Ocak";
@@ -134,36 +134,32 @@ void Date::set_weekday()
 {
     unsigned long long days{};
     for (auto i = year_base; i < m_year; ++i){
-        if (isleap(i)){
-            days += 366;
-        } else {
-            days += 365;
-        }
+        isleap(i) ? days += 366 : days += 365;
     }
     days += get_year_day();
     days %= 7;
     m_weekday = static_cast<Weekday>(days);
 }
 
-Date& Date::set_month_day(const int& _day)
+Date& Date::set_month_day(int _day)
 {
     set(_day, m_month, m_year);
     return *this;
 }
 
-Date& Date::set_month(const int& _month)
+Date& Date::set_month(int _month)
 {
     set(m_day, _month, m_year);
     return *this;
 }
 
-Date& Date::set_year(const int& _year)
+Date& Date::set_year(int _year)
 {
     set(m_day, m_month, _year);
     return *this;
 }
 
-Date& Date::set(const int& _d, const int& _m, const int& _y)
+Date& Date::set(int _d, int _m, int _y)
 {
     if (check_arguments(_d, _m, _y)){
         m_day = _d;
@@ -176,7 +172,7 @@ Date& Date::set(const int& _d, const int& _m, const int& _y)
     return *this;
 }
 
-Date Date::operator-(const int& _day) const
+Date Date::operator-(int _day) const
 {
     Date temp{*this};
     for(auto i = 0; i < _day; ++i){
@@ -185,7 +181,7 @@ Date Date::operator-(const int& _day) const
     return temp;
 }
 
-Date& Date::operator+=(const int& _day)
+Date& Date::operator+=(int _day)
 {
     for(auto i = 0; i < _day; ++i){
         operator++();
@@ -193,7 +189,7 @@ Date& Date::operator+=(const int& _day)
     return *this;
 }
 
-Date& Date::operator-=(const int& _day)
+Date& Date::operator-=(int _day)
 {
     for(auto i = 0; i < _day; ++i){
         operator--();
@@ -331,7 +327,7 @@ long operator-(const Date& _d1, const Date& _d2)
         }
         if (smaller){
             day_diff += _d2.get_year_day() - _d1.get_year_day();
-            return (day_diff * -1);
+            return (-day_diff);
         } else {
             day_diff += _d1.get_year_day() - _d2.get_year_day();
             return day_diff;
@@ -339,7 +335,7 @@ long operator-(const Date& _d1, const Date& _d2)
     }
 }
 
-Date operator+(const Date& _date, const int& _n)
+Date operator+(const Date& _date, int _n)
 {
     Date temp{_date};
     for (auto i = 0; i < _n; ++i){
@@ -348,7 +344,7 @@ Date operator+(const Date& _date, const int& _n)
     return temp;
 }
 
-Date operator+(const int& _n, const Date& _date)
+Date operator+(int _n, const Date& _date)
 {
     return operator+(_date, _n);
 }
@@ -393,7 +389,7 @@ Date::Weekday operator--(Date::Weekday& _r, int)
 
 Date Date::random_date()
 {
-    std::mt19937 gen(std::random_device{}());
+    static std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution rand_d(1, 31);
     std::uniform_int_distribution rand_m(1, 12);
     std::uniform_int_distribution rand_y(random_min_year, random_max_year);
