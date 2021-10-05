@@ -4,6 +4,7 @@
 #include <iosfwd>
 #include <ctime>
 #include <string>
+#include <exception>
 
 namespace project {
 class Date {
@@ -78,5 +79,19 @@ Date::Weekday& operator--(Date::Weekday& r); //30
 Date::Weekday operator--(Date::Weekday& r, int); //30
 
 std::ostream& operator<<(std::ostream& os, const Date::Weekday&_w);
+    
+class bad_day : public std::exception {
+public:
+    bad_day() = default;
+    bad_day(std::string error) : m_error{std::move(error)}{ }
+
+    const char* what() const noexcept override
+    {
+        return m_error.c_str();
+    }
+private:
+    std::string m_error{"there is no such date!"};
+};
+        
 }
 #endif
