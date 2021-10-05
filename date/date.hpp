@@ -8,15 +8,16 @@
 namespace project {
 class Date {
 public:
+    static constexpr int february[2] = {28, 29};
     static constexpr int year_base = 1900;  //1
     static constexpr int random_min_year = 1940;  //2
     static constexpr int random_max_year = 2020;  //3
     enum class Weekday {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}; //4
 
     Date() = default; //5
-    Date(int _d, int _m, int _y);  //6
-    Date(const char* _p);  //7
-    Date(const std::time_t& _timer); //8
+    Date(int d, int m, int y);  //6
+    Date(const char* p);  //7
+    Date(const std::time_t& timer); //8
 
     int get_month_day() const; //9
     int get_month() const; //10
@@ -24,30 +25,30 @@ public:
     int get_year_day() const; //12
     Weekday get_week_day() const; //13
 
-    Date& set_month_day(int _day); //14
-    Date& set_month(int _month); //15
-    Date& set_year(int _year); //16
-    Date& set(int _d, int _m, int _y); //17
+    Date& set_month_day(int day); //14
+    Date& set_month(int month); //15
+    Date& set_year(int year); //16
+    Date& set(int d, int m, int y); //17
 
-    Date operator-(int _day) const; //18
-    Date& operator+=(int _day); //19
-    Date& operator-=(int _day); //20
+    Date operator-(int day) const; //18
+    Date& operator+=(int day); //19
+    Date& operator-=(int day); //20
     Date& operator++(); //21
     Date operator++(int); //22
     Date& operator--(); //23
     Date operator--(int); //24
 
     static Date random_date(); //25
-    static constexpr bool isleap(int _y)
+    static constexpr bool isleap(int y)
     {
-        return (((_y % 4 == 0) && (_y % 100 != 0)) || (_y % 400 == 0));
+        return (((y % 4 == 0) && (y % 100 != 0)) || (y % 400 == 0));
     } //26
 
-    friend bool operator<(const Date& _d1, const Date& _d2); //27
-    friend bool operator==(const Date& _d1, const Date& _d2); //27
+    friend bool operator<(const Date& d1, const Date& d2); //27
+    friend bool operator==(const Date& d1, const Date& d2); //27
 
-    friend std::ostream& operator<<(std::ostream& _os, const Date& _date); //31
-    friend std::istream& operator>>(std::istream& _is, Date& _date); //32
+    friend std::ostream& operator<<(std::ostream& os, const Date& date); //31
+    friend std::istream& operator>>(std::istream& is, Date& date); //32
 
 private:
     int m_day{1};
@@ -57,25 +58,25 @@ private:
 
     void set_weekday();
 
-    static bool check_arguments(int _d, int _m, int _y);
-    static std::string convert_month(int _m);
-    static int convert_month(const std::string& _m);
+    static bool check_arguments(int d, int m, int y);
+    static std::string convert_month(int m);
+    static int convert_month(const std::string& m);
 };
 
-bool operator<=(const Date& _d1, const Date& _d2); //27
-bool operator>(const Date& _d1, const Date& _d2); //27
-bool operator>=(const Date& _d1, const Date& _d2); //27
-bool operator!=(const Date& _d1, const Date& _d2); //27
+bool operator<=(const Date& d1, const Date& d2); //27
+bool operator>(const Date& d1, const Date& d2); //27
+bool operator>=(const Date& d1, const Date& d2); //27
+bool operator!=(const Date& d1, const Date& d2); //27
 
-long operator-(const Date& _d1, const Date& _d2); //28
-Date operator+(const Date& _date, int _n); //29
-Date operator+(int _n, const Date& _date); //29
+long operator-(const Date& d1, const Date& d2); //28
+Date operator+(const Date& date, int n); //29
+Date operator+(int n, const Date& date); //29
 
 Date::Weekday& operator++(Date::Weekday& r); //30
 Date::Weekday operator++(Date::Weekday& r, int); //30
 Date::Weekday& operator--(Date::Weekday& r); //30
 Date::Weekday operator--(Date::Weekday& r, int); //30
 
-std::ostream& operator<<(std::ostream& _os, const Date::Weekday& _w);
+std::ostream& operator<<(std::ostream& os, const Date::Weekday&_w);
 }
 #endif
