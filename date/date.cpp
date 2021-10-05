@@ -6,14 +6,14 @@
 
 namespace project {
 
-Date::Date(int _d, int _m, int _y)
+Date::Date(int d, int m, int y)
 {
-    set(_d, _m, _y);
+    set(d, m, y);
 }
 
-Date::Date(const char* _p)
+Date::Date(const char* p)
 {
-    if (std::string date{_p}; std::count(date.begin(), date.end(), '/') == 2) {
+    if (std::string date{p}; std::count(date.begin(), date.end(), '/') == 2) {
         auto index = date.find('/');
         int d = std::stoi(date.substr(0, index));
         date.erase(0, index + 1);
@@ -27,26 +27,22 @@ Date::Date(const char* _p)
     }
 }
 
-Date::Date(const std::time_t& _timer)
+Date::Date(const std::time_t& timer)
 {
-    std::string date{std::ctime(&_timer)};
+    std::string date{std::ctime(&timer)};
     int d = std::stoi(date.substr(8, date.find_first_of(' ', 8)));
     int m = Date::convert_month(date.substr(4, 3));
     int y = std::stoi(date.substr(date.find_last_of(' ')));
     set(d, m, y);
 }
 
-bool Date::check_arguments(int _d, int _m, int _y)
+bool Date::check_arguments(int d, int m, int y)
 {
-    if ((_y >= year_base) && (_m >= 1 && _m <= 12)){
-        if (_m == 4 || _m == 6 || _m == 9 || _m == 11){
-            return (_d >= 1 && _d <= 30);
-        } else if (_m == 2){
-            if (isleap(_y)){
-                return (_d >= 1 && _d <= 29);
-            } else {
-                return (_d >= 1 && _d <= 28);
-            }
+    if ((y >= year_base) && (m >= 1 && m <= 12)){
+        if (m == 4 || m == 6 || m == 9 || m == 11){
+            return (d >= 1 && d <= 30);
+        } else if (m == 2){
+            return (d >= 1 && february[isleap(y)]);
         } else {
             return (_d >= 1 && _d <= 31);
         }
@@ -64,9 +60,9 @@ int Date::get_month() const
     return m_month;
 }
 
-std::string Date::convert_month(int _m)
+std::string Date::convert_month(int m)
 {
-    switch (_m){
+    switch (m){
     case 1:  return "Ocak";
     case 2:  return "Subat";
     case 3:  return "Mart";
@@ -83,20 +79,20 @@ std::string Date::convert_month(int _m)
     }
 }
 
-int Date::convert_month(const std::string& _m)
+int Date::convert_month(const std::string& m)
 {
-    if (_m == "Jan"){ return 1;}
-    if (_m == "Feb"){ return 2;}
-    if (_m == "Mar"){ return 3;}
-    if (_m == "Apr"){ return 4;}
-    if (_m == "May"){ return 5;}
-    if (_m == "Jun"){ return 6;}
-    if (_m == "Jul"){ return 7;}
-    if (_m == "Aug"){ return 8;}
-    if (_m == "Sep"){ return 9;}
-    if (_m == "Oct"){ return 10;}
-    if (_m == "Nov"){ return 11;}
-    if (_m == "Dec"){ return 12;}
+    if (m == "Jan"){ return 1;}
+    if (m == "Feb"){ return 2;}
+    if (m == "Mar"){ return 3;}
+    if (m == "Apr"){ return 4;}
+    if (m == "May"){ return 5;}
+    if (m == "Jun"){ return 6;}
+    if (m == "Jul"){ return 7;}
+    if (m == "Aug"){ return 8;}
+    if (m == "Sep"){ return 9;}
+    if (m == "Oct"){ return 10;}
+    if (m == "Nov"){ return 11;}
+    if (m == "Dec"){ return 12;}
     return -1; // wrong argument
 }
 
@@ -112,11 +108,7 @@ int Date::get_year_day() const
         if (i == 4 || i == 6 || i == 9 || i == 11){
             days += 30;
         } else if (i == 2){
-            if (isleap(m_year)){
-                days += 29;
-            } else {
-                days += 28;
-            }
+            days += february[isleap(m_year)];
         } else {
             days += 31;
         }
@@ -159,12 +151,12 @@ Date& Date::set_year(int _year)
     return *this;
 }
 
-Date& Date::set(int _d, int _m, int _y)
+Date& Date::set(int d, int m, int y)
 {
-    if (check_arguments(_d, _m, _y)){
-        m_day = _d;
-        m_month = _m;
-        m_year = _y;
+    if (check_arguments(d, m, y)){
+        m_day = d;
+        m_month = m;
+        m_year = y;
         set_weekday();
     } else {
         std::cerr << "wrong argument(s)\n";
@@ -172,26 +164,26 @@ Date& Date::set(int _d, int _m, int _y)
     return *this;
 }
 
-Date Date::operator-(int _day) const
+Date Date::operator-(int day) const
 {
     Date temp{*this};
-    for(auto i = 0; i < _day; ++i){
+    for(auto i = 0; i < day; ++i){
         --temp;
     }
     return temp;
 }
 
-Date& Date::operator+=(int _day)
+Date& Date::operator+=(int day)
 {
-    for(auto i = 0; i < _day; ++i){
+    for(auto i = 0; i < day; ++i){
         operator++();
     }
     return *this;
 }
 
-Date& Date::operator-=(int _day)
+Date& Date::operator-=(int day)
 {
-    for(auto i = 0; i < _day; ++i){
+    for(auto i = 0; i < day; ++i){
         operator--();
     }
     return *this;
@@ -233,11 +225,7 @@ Date& Date::operator--() //ok
     if ((m_month == 5 || m_month == 7 || m_month == 10 || m_month == 12) && m_day == 1){
         dec_month_30 = true;
     } else if (m_month == 3 && m_day == 1){
-        if (isleap(m_year)){
-            set(29, m_month - 1, m_year);
-        } else {
-            set(28, m_month - 1, m_year);
-        }
+        set(february[isleap(m_year)]), m_month - 1, m_year);
         dec_day = false;
     } else if (m_month == 1 && m_day == 1){
         dec_year = true;
@@ -263,69 +251,56 @@ Date Date::operator--(int)
     return temp;
 }
 
-bool operator<(const Date& _d1, const Date& _d2)
+bool operator<(const Date& d1, const Date& d2)
 {
-    if (_d1.m_year < _d2.m_year){
-        return true;
-    }
-    if (_d1.m_year == _d2.m_year){
-        if ( _d1.m_month < _d2.m_month){
-            return true;
-        } else if (_d1.m_month == _d2.m_month){
-            return (_d1.m_day < _d2.m_day);
-        }
-    }
-    return false;
+    return (std::tuple{d1.m_year, d1.m_month, d1.m_day} < 
+           std::tuple{d2.m_year, d2.m_month, d2.m_day});
 }
 
-bool operator==(const Date& _d1, const Date& _d2)
+bool operator==(const Date& d1, const Date& d2)
 {
-    return (_d1.m_year == _d2.m_year &&
-            _d1.m_month == _d2.m_month &&
-            _d1.m_day == _d2.m_day);
+    return (d1.m_year == d2.m_year &&
+            d1.m_month == d2.m_month &&
+            d1.m_day == d2.m_day);
 }
 
-bool operator<=(const Date& _d1, const Date& _d2)
+bool operator<=(const Date& d1, const Date& d2)
 {
-    return !(_d1 > _d2);
+    return !(d1 > d2);
 }
 
-bool operator>(const Date& _d1, const Date& _d2)
+bool operator>(const Date& d1, const Date& d2)
 {
-    return (_d2 < _d1);
+    return (d2 < d1);
 }
 
-bool operator>=(const Date& _d1, const Date& _d2)
+bool operator>=(const Date& d1, const Date& d2)
 {
-    return !(_d1 < _d2);
+    return !(d1 < d2);
 }
 
-bool operator!=(const Date& _d1, const Date&_d2)
+bool operator!=(const Date& d1, const Date& d2)
 {
-    return !( _d1 == _d2);
+    return !( d1 == d2);
 }
 
-long operator-(const Date& _d1, const Date& _d2)
+long operator-(const Date& d1, const Date& d2)
 {
-    if (_d1 == _d2){ return 0;}
-    if (_d1.get_year() == _d2.get_year()){
-        return (_d1.get_year_day() - _d2.get_year_day());
+    if (d1 == d2){ return 0;}
+    if (d1.get_year() == d2.get_year()){
+        return (d1.get_year_day() - d2.get_year_day());
     } else {
-        bool smaller{false};
-        int year_diff = _d1.get_year() - _d2.get_year();
+        bool negative{false};
+        int year_diff = d1.get_year() - d2.get_year();
         if (year_diff < 0){
-            smaller = true;
+            negative = true;
             year_diff *= -1;
         }
         long day_diff{};
         for (auto i = 0; i < year_diff; ++i){
-            if (Date::isleap(i)){
-                day_diff += 366;
-            } else {
-                day_diff += 365;
-            }
+            Date::isleap(i) ? day_diff += 366 : day_diff += 365;
         }
-        if (smaller){
+        if (negative){
             day_diff += _d2.get_year_day() - _d1.get_year_day();
             return (-day_diff);
         } else {
@@ -335,55 +310,55 @@ long operator-(const Date& _d1, const Date& _d2)
     }
 }
 
-Date operator+(const Date& _date, int _n)
+Date operator+(const Date& date, int n)
 {
-    Date temp{_date};
-    for (auto i = 0; i < _n; ++i){
+    Date temp{date};
+    for (auto i = 0; i < n; ++i){
         ++temp;
     }
     return temp;
 }
 
-Date operator+(int _n, const Date& _date)
+Date operator+(int n, const Date& date)
 {
-    return operator+(_date, _n);
+    return operator+(date, n);
 }
 
-Date::Weekday& operator++(Date::Weekday& _r)
+Date::Weekday& operator++(Date::Weekday& r)
 {
-    int weekday = static_cast<int>(_r);
+    int weekday = static_cast<int>(r);
     if (weekday == 6) {
-        _r = Date::Weekday::Sunday;
+        r = Date::Weekday::Sunday;
     } else {
         ++weekday;
-        _r = static_cast<Date::Weekday>(weekday);
+        r = static_cast<Date::Weekday>(weekday);
     }
-    return _r;
+    return r;
 }
 
-Date::Weekday operator++(Date::Weekday& _r, int)
+Date::Weekday operator++(Date::Weekday& r, int)
 {
-    Date::Weekday temp{_r};
-    operator++(_r);
+    Date::Weekday temp{r};
+    operator++(r);
     return temp;
 }
 
-Date::Weekday& operator--(Date::Weekday& _r)
+Date::Weekday& operator--(Date::Weekday& r)
 {
-    int weekday = static_cast<int>(_r);
+    int weekday = static_cast<int>(r);
     if (weekday == 0) {
-        _r = Date::Weekday::Saturday;
+        r = Date::Weekday::Saturday;
     } else {
         --weekday;
-        _r = static_cast<Date::Weekday>(weekday);
+        r = static_cast<Date::Weekday>(weekday);
     }
-    return _r;
+    return r;
 }
 
-Date::Weekday operator--(Date::Weekday& _r, int)
+Date::Weekday operator--(Date::Weekday& r, int)
 {
-    Date::Weekday temp{_r};
-    operator--(_r);
+    Date::Weekday temp{r};
+    operator--(r);
     return temp;
 }
 
@@ -402,31 +377,32 @@ Date Date::random_date()
     return Date{d, m, y};
 }
 
-std::ostream& operator<<(std::ostream& _os, const Date& _date)
+std::ostream& operator<<(std::ostream& os, const Date& date)
 {
-    _os << _date.m_day << " " << Date::convert_month(_date.m_month)
-        << " " << _date.m_year << " " << _date.m_weekday;
-    return _os;
+    std::ostringstream oss;
+    oss << date.m_day << " " << Date::convert_month(date.m_month)
+        << " " << date.m_year << " " << date.m_weekday;
+    return os << oss.str();
 }
 
-std::ostream& operator<<(std::ostream& _os, const Date::Weekday& _w)
+std::ostream& operator<<(std::ostream& os, const Date::Weekday& w)
 {
-    switch (_w){
-    case Date::Weekday::Sunday:    _os << "Pazar"; break;
-    case Date::Weekday::Monday:    _os << "Pazartesi"; break;
-    case Date::Weekday::Tuesday:   _os << "Sali"; break;
-    case Date::Weekday::Wednesday: _os << "Carsamba"; break;
-    case Date::Weekday::Thursday:  _os << "Persembe"; break;
-    case Date::Weekday::Friday:    _os << "Cuma"; break;
-    case Date::Weekday::Saturday:  _os << "Cumartesi"; break;
+    switch (w){
+    case Date::Weekday::Sunday:    os << "Pazar"; break;
+    case Date::Weekday::Monday:    os << "Pazartesi"; break;
+    case Date::Weekday::Tuesday:   os << "Sali"; break;
+    case Date::Weekday::Wednesday: os << "Carsamba"; break;
+    case Date::Weekday::Thursday:  os << "Persembe"; break;
+    case Date::Weekday::Friday:    os << "Cuma"; break;
+    case Date::Weekday::Saturday:  os << "Cumartesi"; break;
     }
-    return _os;
+    return os;
 }
 
-std::istream& operator>>(std::istream& _is, Date& _date)
+std::istream& operator>>(std::istream& is, Date& date)
 {
     std::string input;
-    _is >> input;
+    is >> input;
     int nondigits{};
     for (auto& c : input){
         if (!std::isdigit(c)){
@@ -443,7 +419,7 @@ std::istream& operator>>(std::istream& _is, Date& _date)
     } else {
         std::cout << "wrong input format\n";
     }
-    return _is;
+    return is;
 }
 
 } //namespace
