@@ -1,6 +1,8 @@
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 #include <random>
+#include <tuple>
 
 #include "date.hpp"
 
@@ -23,29 +25,23 @@ Date::Date(const char* p)
         int y = std::stoi(date);
         set(d, m, y);
     } else {
-        std::cerr << "wrong input format\n";
+        throw bad_day{"wrong input format!"};
     }
 }
 
 Date::Date(const std::time_t& timer)
 {
-    std::string date{std::ctime(&timer)};
-    int d = std::stoi(date.substr(8, date.find_first_of(' ', 8)));
-    int m = Date::convert_month(date.substr(4, 3));
-    int y = std::stoi(date.substr(date.find_last_of(' ')));
+    std::string_view date{std::ctime(&timer)};
+    int d = std::stoi(std::string{date.substr(8, date.find_first_of(' ', 8))});
+    int m = Date::convert_month(std::string{date.substr(4, 3)});
+    int y = std::stoi(std::string{date.substr(date.find_last_of(' '))});
     set(d, m, y);
 }
 
 bool Date::check_arguments(int d, int m, int y)
 {
     if ((y >= year_base) && (m >= 1 && m <= 12)){
-        if (m == 4 || m == 6 || m == 9 || m == 11){
-            return (d >= 1 && d <= 30);
-        } else if (m == 2){
-            return (d >= 1 && february[isleap(y)]);
-        } else {
-            return (_d >= 1 && _d <= 31);
-        }
+        return (d >= 1 && d <= year_table[isleap(y)][m]);
     }
     return false;
 }
@@ -105,13 +101,7 @@ int Date::get_year_day() const
 {
     int days{};
     for (auto i = 1; i < m_month; ++i){
-        if (i == 4 || i == 6 || i == 9 || i == 11){
-            days += 30;
-        } else if (i == 2){
-            days += february[isleap(m_year)];
-        } else {
-            days += 31;
-        }
+        days += year_table[isleap(m_year)][i];
     }
     days += m_day;
     return days;
@@ -124,7 +114,7 @@ Date::Weekday Date::get_week_day() const
 
 void Date::set_weekday()
 {
-    unsigned long long days{};
+    std::uint64_t days{};
     for (auto i = year_base; i < m_year; ++i){
         isleap(i) ? days += 366 : days += 365;
     }
@@ -159,7 +149,7 @@ Date& Date::set(int d, int m, int y)
         m_year = y;
         set_weekday();
     } else {
-        std::cerr << "wrong argument(s)\n";
+        throw bad_day{};
     }
     return *this;
 }
@@ -191,20 +181,10 @@ Date& Date::operator-=(int day)
 
 Date& Date::operator++()
 {
-    bool inc_month{false}, inc_year{false};
-    if ((m_month == 4 || m_month == 6 || m_month == 9 || m_month == 11) && m_day == 30){
-        inc_month = true;
-    } else if (m_month == 2 && ((isleap(m_year) && m_day == 29) || (!isleap(m_year) && m_day == 28))){
-        inc_month = true;
-    } else if (m_month == 12 && m_day == 31){
-        inc_year = true;
-    } else if (m_day == 31){
-        inc_month = true;
-    }
-    if (inc_month){
-        set(1, m_month + 1, m_year);
-    } else if (inc_year){
+    if (m_month == 12 && m_day == 31){
         set(1, 1, m_year + 1);
+    } else if (m_day == year_table[isleap(m_year)][m_month]){
+        set(1, m_month + 1, m_year);
     } else {
         set_month_day(m_day + 1);
     }
@@ -218,27 +198,13 @@ Date Date::operator++(int)
     return temp;
 }
 
-Date& Date::operator--() //ok
+Date& Date::operator--()
 {
-    bool dec_month_31{false}, dec_month_30{false};
-    bool dec_year{false}, dec_day{true};
-    if ((m_month == 5 || m_month == 7 || m_month == 10 || m_month == 12) && m_day == 1){
-        dec_month_30 = true;
-    } else if (m_month == 3 && m_day == 1){
-        set(february[isleap(m_year)]), m_month - 1, m_year);
-        dec_day = false;
-    } else if (m_month == 1 && m_day == 1){
-        dec_year = true;
-    } else if (m_day == 1){
-        dec_month_31 = true;
-    }
-    if (dec_month_30){
-        set(30, m_month - 1, m_year);
-    } else if (dec_month_31){
-        set(31, m_month - 1, m_year);
-    } else if (dec_year){
+    if (m_month == 1 && m_day == 1){
         set(31, 12, m_year - 1);
-    } else if (dec_day){
+    } else if (m_day == 1){
+        set(year_table[isleap(m_year) + 2][m_month], m_month - 1, m_year);
+    } else {
         set_month_day(m_day - 1);
     }
     return *this;
@@ -253,8 +219,8 @@ Date Date::operator--(int)
 
 bool operator<(const Date& d1, const Date& d2)
 {
-    return (std::tuple{d1.m_year, d1.m_month, d1.m_day} < 
-           std::tuple{d2.m_year, d2.m_month, d2.m_day});
+    return (std::tuple{d1.m_year, d1.m_month, d1.m_day} <
+            std::tuple{d2.m_year, d2.m_month, d2.m_day});
 }
 
 bool operator==(const Date& d1, const Date& d2)
@@ -284,7 +250,7 @@ bool operator!=(const Date& d1, const Date& d2)
     return !( d1 == d2);
 }
 
-long operator-(const Date& d1, const Date& d2)
+std::int64_t operator-(const Date& d1, const Date& d2)
 {
     if (d1 == d2){ return 0;}
     if (d1.get_year() == d2.get_year()){
@@ -296,15 +262,15 @@ long operator-(const Date& d1, const Date& d2)
             negative = true;
             year_diff *= -1;
         }
-        long day_diff{};
+        std::int64_t day_diff{};
         for (auto i = 0; i < year_diff; ++i){
             Date::isleap(i) ? day_diff += 366 : day_diff += 365;
         }
         if (negative){
-            day_diff += _d2.get_year_day() - _d1.get_year_day();
+            day_diff += d2.get_year_day() - d1.get_year_day();
             return (-day_diff);
         } else {
-            day_diff += _d1.get_year_day() - _d2.get_year_day();
+            day_diff += d1.get_year_day() - d2.get_year_day();
             return day_diff;
         }
     }
@@ -415,9 +381,9 @@ std::istream& operator>>(std::istream& is, Date& date)
         int m = std::stoi(input.substr(0, input.find_first_not_of("0123456789")));
         input.erase(0, input.find_first_not_of("0123456789") + 1);
         int y = std::stoi(input);
-        _date.set(d, m, y);
+        date.set(d, m, y);
     } else {
-        std::cout << "wrong input format\n";
+        throw bad_day{"wrong input format!"};
     }
     return is;
 }
