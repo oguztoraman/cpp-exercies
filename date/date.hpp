@@ -1,15 +1,15 @@
-#ifndef DATE_H
-#define DATE_H
+#ifndef DATE_HPP
+#define DATE_HPP
 
 #include <iosfwd>
 #include <ctime>
 #include <string>
 #include <exception>
+#include <cstdint>
 
 namespace project {
 class Date {
 public:
-    static constexpr int february[2] = {28, 29};
     static constexpr int year_base = 1900;  //1
     static constexpr int random_min_year = 1940;  //2
     static constexpr int random_max_year = 2020;  //3
@@ -62,6 +62,12 @@ private:
     static bool check_arguments(int d, int m, int y);
     static std::string convert_month(int m);
     static int convert_month(const std::string& m);
+    static constexpr int year_table[4][13] = {
+        { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
+        { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
+        { 0, 31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30 },
+        { 0, 31, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30 }
+    };
 };
 
 bool operator<=(const Date& d1, const Date& d2); //27
@@ -69,7 +75,7 @@ bool operator>(const Date& d1, const Date& d2); //27
 bool operator>=(const Date& d1, const Date& d2); //27
 bool operator!=(const Date& d1, const Date& d2); //27
 
-long operator-(const Date& d1, const Date& d2); //28
+std::int64_t operator-(const Date& d1, const Date& d2); //28
 Date operator+(const Date& date, int n); //29
 Date operator+(int n, const Date& date); //29
 
@@ -79,7 +85,7 @@ Date::Weekday& operator--(Date::Weekday& r); //30
 Date::Weekday operator--(Date::Weekday& r, int); //30
 
 std::ostream& operator<<(std::ostream& os, const Date::Weekday&_w);
-    
+
 class bad_day : public std::exception {
 public:
     bad_day() = default;
@@ -92,6 +98,6 @@ public:
 private:
     std::string m_error{"there is no such date!"};
 };
-        
+
 }
-#endif
+#endif // DATE_HPP
