@@ -33,7 +33,7 @@ Date::Date(const std::time_t& timer)
 {
     std::string_view date{std::ctime(&timer)};
     int d = std::stoi(std::string{date.substr(8, date.find_first_of(' ', 8))});
-    int m = Date::convert_month(std::string{date.substr(4, 3)});
+    int m = Date::convert_month(date.substr(4, 3));
     int y = std::stoi(std::string{date.substr(date.find_last_of(' '))});
     set(d, m, y);
 }
@@ -75,7 +75,7 @@ std::string Date::convert_month(int m)
     }
 }
 
-int Date::convert_month(const std::string& m)
+int Date::convert_month(const std::string_view& m)
 {
     if (m == "Jan"){ return 1;}
     if (m == "Feb"){ return 2;}
