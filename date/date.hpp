@@ -61,7 +61,7 @@ private:
 
     static bool check_arguments(int d, int m, int y);
     static std::string convert_month(int m);
-    static int convert_month(const std::string& m);
+    static int convert_month(const std::string_view& m);
     static constexpr int year_table[4][13] = {
         { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
         { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
