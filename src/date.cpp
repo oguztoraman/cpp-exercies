@@ -59,18 +59,18 @@ int Date::get_month() const
 std::string Date::convert_month(int m)
 {
     switch (m){
-    case 1:  return "Ocak";
-    case 2:  return "Subat";
-    case 3:  return "Mart";
-    case 4:  return "Nisan";
-    case 5:  return "Mayis";
-    case 6:  return "Haziran";
-    case 7:  return "Temmuz";
-    case 8:  return "Agustos";
-    case 9:  return "Eylul";
-    case 10: return "Ekim";
-    case 11: return "Kasim";
-    case 12: return "Aralik";
+    case 1:  return "January";
+    case 2:  return "February";
+    case 3:  return "March";
+    case 4:  return "April";
+    case 5:  return "May";
+    case 6:  return "June";
+    case 7:  return "July";
+    case 8:  return "August";
+    case 9:  return "September";
+    case 10: return "October";
+    case 11: return "November";
+    case 12: return "December";
     default: return ""; // wrong argument
     }
 }
@@ -354,13 +354,13 @@ std::ostream& operator<<(std::ostream& os, const Date& date)
 std::ostream& operator<<(std::ostream& os, const Date::Weekday& w)
 {
     switch (w){
-    case Date::Weekday::Sunday:    os << "Pazar"; break;
-    case Date::Weekday::Monday:    os << "Pazartesi"; break;
-    case Date::Weekday::Tuesday:   os << "Sali"; break;
-    case Date::Weekday::Wednesday: os << "Carsamba"; break;
-    case Date::Weekday::Thursday:  os << "Persembe"; break;
-    case Date::Weekday::Friday:    os << "Cuma"; break;
-    case Date::Weekday::Saturday:  os << "Cumartesi"; break;
+    case Date::Weekday::Sunday:    os << "Sunday"; break;
+    case Date::Weekday::Monday:    os << "Monday"; break;
+    case Date::Weekday::Tuesday:   os << "Tuesday"; break;
+    case Date::Weekday::Wednesday: os << "Wednesday"; break;
+    case Date::Weekday::Thursday:  os << "Thursday"; break;
+    case Date::Weekday::Friday:    os << "Friday"; break;
+    case Date::Weekday::Saturday:  os << "Saturday"; break;
     }
     return os;
 }
