@@ -1,7 +1,7 @@
-#include <iostream>
 #include <vector>
-#include <algorithm>
 #include <fstream>
+#include <iostream>
+#include <algorithm>
 
 #include <date.hpp>
 
@@ -65,7 +65,8 @@ int main()
         std::cout << "d2; " << d2 << "\n";
         /* 26 */
         std::cout << "d2.get_year(); " << d2.get_year() << "\n";
-        std::cout << "Date::isleap(d2.get_year()); " << std::boolalpha << Date::isleap(d2.get_year()) << "\n";
+        std::cout << "Date::isleap(d2.get_year()); "
+                  << std::boolalpha << Date::isleap(d2.get_year()) << "\n";
         /* 25 */
         std::vector<Date> dvec;
         dvec.reserve(1'000'000);
@@ -89,8 +90,10 @@ int main()
         std::cout << "dvec.front(); " << dvec.front() << "\n";
         std::cout << "dvec.back(); " << dvec.back() << "\n";
         std::cout << "dvec.size(); " << dvec.size() << "\n";
-        std::cout << "dvec.front() - dvec.back(); " << dvec.front() - dvec.back() << "\n";
-        std::cout << "dvec.front() + dvec.size() - 1; " << dvec.front() + dvec.size() - 1 << "\n";
+        std::cout << "dvec.front() - dvec.back(); "
+                  << dvec.front() - dvec.back() << "\n";
+        std::cout << "dvec.front() + dvec.size() - 1; "
+                  << dvec.front() + dvec.size() - 1 << "\n";
         /* 27 */
         if (Date{} == Date{}){
             std::cout << Date{} << " == " << Date{} << "\n";
