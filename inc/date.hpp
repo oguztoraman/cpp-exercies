@@ -1,11 +1,11 @@
 #ifndef DATE_HPP
 #define DATE_HPP
 
-#include <iosfwd>
 #include <ctime>
+#include <iosfwd>
 #include <string>
-#include <exception>
 #include <cstdint>
+#include <exception>
 
 namespace project {
 class Date {
@@ -13,7 +13,10 @@ public:
     static constexpr int year_base = 1900;  //1
     static constexpr int random_min_year = 1940;  //2
     static constexpr int random_max_year = 2020;  //3
-    enum class Weekday {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}; //4
+    enum class Weekday {
+        Sunday, Monday, Tuesday,
+        Wednesday, Thursday, Friday, Saturday
+    }; //4
 
     Date() = default; //5
     Date(int d, int m, int y);  //6
@@ -91,6 +94,7 @@ public:
     bad_day() = default;
     bad_day(std::string error) : m_error{std::move(error)}{ }
 
+    [[nodiscard]]
     const char* what() const noexcept override
     {
         return m_error.c_str();
