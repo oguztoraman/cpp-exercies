@@ -269,10 +269,9 @@ std::int64_t operator-(const Date& d1, const Date& d2)
         if (negative){
             day_diff += d2.get_year_day() - d1.get_year_day();
             return (-day_diff);
-        } else {
-            day_diff += d1.get_year_day() - d2.get_year_day();
-            return day_diff;
         }
+        day_diff += d1.get_year_day() - d2.get_year_day();
+        return day_diff;
     }
 }
 
