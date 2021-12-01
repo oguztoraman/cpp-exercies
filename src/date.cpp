@@ -255,24 +255,23 @@ std::int64_t operator-(const Date& d1, const Date& d2)
     if (d1 == d2){ return 0;}
     if (d1.get_year() == d2.get_year()){
         return (d1.get_year_day() - d2.get_year_day());
-    } else {
-        bool negative{false};
-        int year_diff = d1.get_year() - d2.get_year();
-        if (year_diff < 0){
-            negative = true;
-            year_diff *= -1;
-        }
-        std::int64_t day_diff{};
-        for (auto i = 0; i < year_diff; ++i){
-            Date::isleap(i) ? day_diff += 366 : day_diff += 365;
-        }
-        if (negative){
-            day_diff += d2.get_year_day() - d1.get_year_day();
-            return (-day_diff);
-        }
-        day_diff += d1.get_year_day() - d2.get_year_day();
-        return day_diff;
     }
+    bool negative{false};
+    int year_diff = d1.get_year() - d2.get_year();
+    if (year_diff < 0){
+        negative = true;
+        year_diff *= -1;
+    }
+    std::int64_t day_diff{};
+    for (auto i = 0; i < year_diff; ++i){
+        Date::isleap(i) ? day_diff += 366 : day_diff += 365;
+    }
+    if (negative){
+        day_diff += d2.get_year_day() - d1.get_year_day();
+        return (-day_diff);
+    }
+    day_diff += d1.get_year_day() - d2.get_year_day();
+    return day_diff;
 }
 
 Date operator+(const Date& date, int n)
