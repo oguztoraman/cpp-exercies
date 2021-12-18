@@ -48,8 +48,17 @@ public:
         return (((y % 4 == 0) && (y % 100 != 0)) || (y % 400 == 0));
     } //26
 
-    friend bool operator<(const Date& d1, const Date& d2); //27
-    friend bool operator==(const Date& d1, const Date& d2); //27
+    bool operator==(const Date&) const = default; //27
+    constexpr auto operator<=>(const Date& other) const noexcept //27
+    {
+        if (auto result = m_year <=> other.m_year; result != 0){
+            return result;
+        }
+        if (auto result = m_month <=> other.m_month; result != 0){
+            return result;
+        }
+        return m_day <=> other.m_day;
+    }
 
     friend std::ostream& operator<<(std::ostream& os, const Date& date); //31
     friend std::istream& operator>>(std::istream& is, Date& date); //32
@@ -72,11 +81,6 @@ private:
         { 0, 31, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30 }
     };
 };
-
-bool operator<=(const Date& d1, const Date& d2); //27
-bool operator>(const Date& d1, const Date& d2); //27
-bool operator>=(const Date& d1, const Date& d2); //27
-bool operator!=(const Date& d1, const Date& d2); //27
 
 std::int64_t operator-(const Date& d1, const Date& d2); //28
 Date operator+(const Date& date, int n); //29

@@ -217,39 +217,6 @@ Date Date::operator--(int)
     return temp;
 }
 
-bool operator<(const Date& d1, const Date& d2)
-{
-    return (std::tuple{d1.m_year, d1.m_month, d1.m_day} <
-            std::tuple{d2.m_year, d2.m_month, d2.m_day});
-}
-
-bool operator==(const Date& d1, const Date& d2)
-{
-    return (d1.m_year == d2.m_year &&
-            d1.m_month == d2.m_month &&
-            d1.m_day == d2.m_day);
-}
-
-bool operator<=(const Date& d1, const Date& d2)
-{
-    return !(d1 > d2);
-}
-
-bool operator>(const Date& d1, const Date& d2)
-{
-    return (d2 < d1);
-}
-
-bool operator>=(const Date& d1, const Date& d2)
-{
-    return !(d1 < d2);
-}
-
-bool operator!=(const Date& d1, const Date& d2)
-{
-    return !( d1 == d2);
-}
-
 std::int64_t operator-(const Date& d1, const Date& d2)
 {
     if (d1 == d2){ return 0;}
