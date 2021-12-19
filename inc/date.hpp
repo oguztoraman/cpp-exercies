@@ -23,10 +23,19 @@ public:
     Date(const char* p);  //7
     Date(const std::time_t& timer); //8
 
+    [[nodiscard]]
     int get_month_day() const; //9
+
+    [[nodiscard]]
     int get_month() const; //10
+
+    [[nodiscard]]
     int get_year() const; //11
+
+    [[nodiscard]]
     int get_year_day() const; //12
+
+    [[nodiscard]]
     Weekday get_week_day() const; //13
 
     Date& set_month_day(int day); //14
@@ -42,13 +51,18 @@ public:
     Date& operator--(); //23
     Date operator--(int); //24
 
+    [[nodiscard]]
     static Date random_date(); //25
+
+    [[nodiscard]]
     static constexpr bool isleap(int y)
     {
         return (((y % 4 == 0) && (y % 100 != 0)) || (y % 400 == 0));
     } //26
 
     bool operator==(const Date&) const = default; //27
+
+    [[nodiscard]]
     constexpr auto operator<=>(const Date& other) const noexcept //27
     {
         if (auto result = m_year <=> other.m_year; result != 0){
@@ -71,9 +85,15 @@ private:
 
     void set_weekday();
 
+    [[nodiscard]]
     static bool check_arguments(int d, int m, int y);
+
+    [[nodiscard]]
     static std::string convert_month(int m);
+
+    [[nodiscard]]
     static int convert_month(const std::string_view& m);
+
     static constexpr int year_table[4][13] = {
         { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
         { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
@@ -82,7 +102,9 @@ private:
     };
 };
 
+[[nodiscard]]
 std::int64_t operator-(const Date& d1, const Date& d2); //28
+
 Date operator+(const Date& date, int n); //29
 Date operator+(int n, const Date& date); //29
 
