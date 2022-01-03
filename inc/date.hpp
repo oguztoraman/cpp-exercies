@@ -74,6 +74,9 @@ public:
         return m_day <=> other.m_day;
     }
 
+    [[nodiscard]]
+    std::string to_string() const;
+
     friend std::ostream& operator<<(std::ostream& os, const Date& date); //31
     friend std::istream& operator>>(std::istream& is, Date& date); //32
 

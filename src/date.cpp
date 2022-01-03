@@ -308,12 +308,17 @@ Date Date::random_date()
     return Date{d, m, y};
 }
 
-std::ostream& operator<<(std::ostream& os, const Date& date)
+std::string Date::to_string() const
 {
     std::ostringstream oss;
-    oss << date.m_day << " " << Date::convert_month(date.m_month)
-        << " " << date.m_year << " " << date.m_weekday;
-    return os << oss.str();
+    oss << m_day << " " << Date::convert_month(m_month)
+        << " " << m_year << " " << m_weekday;
+    return oss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const Date& date)
+{
+    return os << date.to_string();
 }
 
 std::ostream& operator<<(std::ostream& os, const Date::Weekday& w)
