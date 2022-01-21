@@ -10,6 +10,8 @@
 namespace project {
 class Date {
 public:
+    static_assert (__cplusplus >= 202002L, "c++20 required!");
+
     static constexpr int year_base = 1900;  //1
     static constexpr int random_min_year = 1940;  //2
     static constexpr int random_max_year = 2020;  //3
