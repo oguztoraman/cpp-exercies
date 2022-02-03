@@ -12,4 +12,4 @@ include_directories("${PROJECT_SOURCE_DIR}/inc")
 
 file(GLOB SRCS "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
-add_executable(date main.cpp ${SRCS})
+add_executable(date tests.cpp ${SRCS})
