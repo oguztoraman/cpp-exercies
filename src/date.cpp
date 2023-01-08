@@ -28,7 +28,7 @@
 
 #include <date.hpp>
 
-namespace project {
+namespace date_time {
 
 Date::Date(int d, int m, int y)
 {
@@ -380,4 +380,4 @@ std::istream& operator>>(std::istream& is, Date& date)
     return is;
 }
 
-} //namespace
+} /* namespace date_time */

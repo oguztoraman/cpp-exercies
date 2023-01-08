@@ -29,7 +29,7 @@
 #include <cstdint>
 #include <exception>
 
-namespace project {
+namespace date_time {
 class Date {
 public:
     static_assert (__cplusplus >= 202002L, "c++20 required!");
@@ -156,5 +156,6 @@ private:
     std::string m_error{"there is no such date!"};
 };
 
-}
-#endif // DATE_HPP
+} /* namespace date_time */
+
+#endif /* DATE_HPP */
